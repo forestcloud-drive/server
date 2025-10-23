@@ -5,6 +5,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { createUniqueName } from '@app/shared/utils';
 import { MimeTypes } from '@app/shared/enums';
 import { Transaction } from 'sequelize';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class FilesRepository extends AbstractRepository<FileModel> {
@@ -12,6 +13,7 @@ export class FilesRepository extends AbstractRepository<FileModel> {
     @InjectModel(FileModel) private readonly fileModel: typeof FileModel,
   ) {
     super(fileModel, {
+      idGenerator: uuidv7,
       autoGenerateId: true,
       idField: 'fileId',
     });
