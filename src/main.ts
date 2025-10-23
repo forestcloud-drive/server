@@ -38,10 +38,11 @@ async function bootstrap(): Promise<void> {
     type: VersioningType.URI,
     prefix: 'v',
   });
-  app.enableCors({
-    origin: config.get<string>(EnvParams.CLIENT_URL),
-    credentials: true,
-  } as CorsOptions);
+  // ? Think about it, there can be multiple clients
+  // app.enableCors({
+  //   origin: config.get<string>(EnvParams.CLIENT_URL),
+  //   credentials: true,
+  // } as CorsOptions);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

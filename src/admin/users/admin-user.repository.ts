@@ -3,6 +3,7 @@ import { UserModel } from '../../database/models/user.model';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserRoles } from '@app/shared/enums';
+import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class AdminUserRepository extends AbstractRepository<UserModel> {
@@ -10,6 +11,7 @@ export class AdminUserRepository extends AbstractRepository<UserModel> {
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
   ) {
     super(userModel, {
+      idGenerator: uuidv7,
       autoGenerateId: true,
       idField: 'userId',
     });
