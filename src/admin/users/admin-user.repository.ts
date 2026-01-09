@@ -1,20 +1,15 @@
-import { AbstractRepository } from 'nest-sequelize-repository';
+import { AbstractRepository } from '@nestlize/repository';
 import { UserModel } from '../../database/models/user.model';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserRoles } from '@app/shared/enums';
-import { v7 as uuidv7 } from 'uuid';
 
 @Injectable()
 export class AdminUserRepository extends AbstractRepository<UserModel> {
   constructor(
     @InjectModel(UserModel) private readonly userModel: typeof UserModel,
   ) {
-    super(userModel, {
-      idGenerator: uuidv7,
-      autoGenerateId: true,
-      idField: 'userId',
-    });
+    super(userModel);
   }
 
   public async giveAccess(userId: string): Promise<UserModel> {

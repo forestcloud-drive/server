@@ -2,18 +2,15 @@ import {
   AllowNull,
   BelongsTo,
   Column,
-  CreatedAt,
   DataType,
   Default,
-  DeletedAt,
   ForeignKey,
   HasMany,
-  Model,
   PrimaryKey,
   Table,
-  UpdatedAt,
 } from 'sequelize-typescript';
 import { UserModel } from './user.model';
+import { BaseModel } from '@nestlize/repository';
 
 export interface FileCreationAttributes {
   userId: string;
@@ -26,8 +23,9 @@ export interface FileCreationAttributes {
 }
 
 @Table({ tableName: 'files_metadata', paranoid: true, timestamps: true })
-export class FileModel extends Model<FileModel, FileCreationAttributes> {
+export class FileModel extends BaseModel<FileModel, FileCreationAttributes> {
   @PrimaryKey
+  @Default(DataType.UUIDV4)
   @Column
   declare fileId: string;
 
@@ -70,18 +68,4 @@ export class FileModel extends Model<FileModel, FileCreationAttributes> {
 
   @HasMany(() => FileModel)
   declare children: FileModel[];
-
-  @CreatedAt
-  @Column
-  declare createdAt: Date;
-
-  @UpdatedAt
-  @Column
-  declare updatedAt: Date;
-
-  @Default(null)
-  @AllowNull
-  @DeletedAt
-  @Column({ type: DataType.DATE })
-  declare deletedAt: Date | null;
 }
