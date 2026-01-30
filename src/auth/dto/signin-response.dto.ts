@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserPayloadDto } from '@app/shared/dtos';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class SigninResponseDto {
   @ApiProperty({ example: 'jwt token' })

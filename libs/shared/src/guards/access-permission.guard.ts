@@ -1,3 +1,5 @@
+import { ACCESS_PERMISSION_KEY } from '@app/shared/decorators';
+import { extractUserFromRequest } from '@app/shared/utils';
 import {
   CanActivate,
   ExecutionContext,
@@ -5,10 +7,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { FilesRepository } from '../../../../src/files/files.repository';
-import { extractUserFromRequest } from '@app/shared/utils';
-import { ACCESS_PERMISSION_KEY } from '@app/shared/decorators';
 import e from 'express';
+
+import { FilesRepository } from '../../../../src/files/files.repository';
 
 @Injectable()
 export class AccessPermissionGuard implements CanActivate {

@@ -1,3 +1,4 @@
+import { ValidateParentFile } from '@app/shared/validators';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsNotEmpty,
@@ -6,7 +7,6 @@ import {
   IsUUID,
   Validate,
 } from 'class-validator';
-import { ValidateParentFile } from '@app/shared/validators';
 
 export class SetParentQueryDto {
   @IsString()

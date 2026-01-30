@@ -1,5 +1,5 @@
-import * as Joi from 'joi';
 import type { EnvParams } from '@app/shared/enums';
+import * as Joi from 'joi';
 import { v7 as uuidv7 } from 'uuid';
 
 export class ConfigValidationService {

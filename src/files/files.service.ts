@@ -1,3 +1,9 @@
+import * as fs from 'node:fs/promises';
+
+import * as path from 'path';
+import { toFileDto } from '@app/shared/builders';
+import { FileDto } from '@app/shared/dtos';
+import { EnvParams } from '@app/shared/enums';
 import {
   BadRequestException,
   Injectable,
@@ -5,18 +11,14 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { FileDto } from '@app/shared/dtos';
-import { FilesRepository } from './files.repository';
-import { toFileDto } from '@app/shared/builders';
 import { ConfigService } from '@nestjs/config';
-import { EnvParams } from '@app/shared/enums';
-import * as path from 'path';
+import * as archiver from 'archiver';
 import e from 'express';
 import { Transaction } from 'sequelize';
-import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
-import * as fs from 'node:fs/promises';
+
 import { FileModel } from '../database/models/file.model';
-import * as archiver from 'archiver';
+import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
+import { FilesRepository } from './files.repository';
 
 @Injectable()
 export class FilesService {

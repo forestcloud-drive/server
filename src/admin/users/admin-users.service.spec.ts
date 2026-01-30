@@ -1,13 +1,14 @@
-import type { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
-import { AdminUsersService } from './admin-users.service';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { UserModel } from '../../database/models/user.model';
-import { Sequelize } from 'sequelize-typescript';
 import { UserRoles } from '@app/shared/enums';
 import { NotFoundException } from '@nestjs/common';
-import { AdminUserRepository } from './admin-user.repository';
+import { SequelizeModule } from '@nestjs/sequelize';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { Sequelize } from 'sequelize-typescript';
+
 import { FileModel } from '../../database/models/file.model';
+import { UserModel } from '../../database/models/user.model';
+import { AdminUserRepository } from './admin-user.repository';
+import { AdminUsersService } from './admin-users.service';
 
 describe('UsersService', () => {
   let service: AdminUsersService;

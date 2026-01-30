@@ -1,3 +1,6 @@
+import { User } from '@app/shared/decorators';
+import { RejectResponseDto, UserDto, UserPayloadDto } from '@app/shared/dtos';
+import { JwtGuard } from '@app/shared/guards';
 import {
   Body,
   Controller,
@@ -6,18 +9,16 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { User } from '@app/shared/decorators';
-import { RejectResponseDto, UserDto, UserPayloadDto } from '@app/shared/dtos';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtGuard } from '@app/shared/guards';
+
 import { ChangeUserInfoBodyDto } from './dto/change-user-info-body.dto';
 import { ChangeUserPasswordBodyDto } from './dto/change-user-password-body.dto';
+import { UsersService } from './users.service';
 
 @ApiTags('Users')
 @ApiResponse({

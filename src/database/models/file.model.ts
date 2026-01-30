@@ -1,3 +1,4 @@
+import { BaseModel } from '@nestlize/repository';
 import {
   AllowNull,
   BelongsTo,
@@ -9,8 +10,8 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+
 import { UserModel } from './user.model';
-import { BaseModel } from '@nestlize/repository';
 
 export interface FileCreationAttributes {
   userId: string;

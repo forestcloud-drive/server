@@ -1,13 +1,14 @@
 import {
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
-import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
+
 import { FilesRepository } from '../../../../src/files/files.repository';
 
 @Injectable()
