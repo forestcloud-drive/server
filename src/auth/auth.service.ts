@@ -1,18 +1,19 @@
+import { toUserDto } from '@app/shared/builders';
+import { UserDto, UserPayloadDto } from '@app/shared/dtos';
+import { UserRoles } from '@app/shared/enums';
 import {
   ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
+import { SigninResponseDto } from './dto/signin-response.dto';
 import { SignupBodyDto } from './dto/signup-body.dto';
 import { SignupResponseDto } from './dto/signup-response.dto';
-import { UsersService } from '../users/users.service';
-import { UserRoles } from '@app/shared/enums';
-import { JwtService } from '@nestjs/jwt';
-import { UserDto, UserPayloadDto } from '@app/shared/dtos';
-import * as bcrypt from 'bcrypt';
-import { toUserDto } from '@app/shared/builders';
-import { SigninResponseDto } from './dto/signin-response.dto';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {

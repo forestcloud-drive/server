@@ -1,9 +1,10 @@
-import { Global, Logger, Module } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigService } from '@nestjs/config';
 import { EnvParams } from '@app/shared/enums';
-import { UserModel } from './models/user.model';
+import { Global, Logger, Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { SequelizeModule } from '@nestjs/sequelize';
+
 import { FileModel } from './models/file.model';
+import { UserModel } from './models/user.model';
 
 @Global()
 @Module({

@@ -1,3 +1,10 @@
+import { AccessPermission, User } from '@app/shared/decorators';
+import { FileDto, RejectResponseDto } from '@app/shared/dtos';
+import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
+import {
+  FilesValidationInterceptor,
+  RollbackUploadInterceptor,
+} from '@app/shared/interceptors';
 import {
   Controller,
   Delete,
@@ -11,7 +18,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesService } from './files.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -20,20 +27,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileDto, RejectResponseDto } from '@app/shared/dtos';
-import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import {
-  FilesValidationInterceptor,
-  RollbackUploadInterceptor,
-} from '@app/shared/interceptors';
-import { AccessPermission, User } from '@app/shared/decorators';
-import { DownloadFileParamsDto } from './dto/download-file-params.dto';
 import e from 'express';
-import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
-import { SetParentQueryDto } from './dto/set-parent-query.dto';
+
+import { DownloadFileParamsDto } from './dto/download-file-params.dto';
 import { GetFileParamsDto } from './dto/get-file-params.dto';
+import { SetParentQueryDto } from './dto/set-parent-query.dto';
+import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
+import { FilesService } from './files.service';
 
 @ApiTags('Files')
 @ApiBearerAuth()

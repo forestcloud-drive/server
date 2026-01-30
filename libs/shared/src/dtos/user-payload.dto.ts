@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { UserRoles } from '@app/shared/enums';
+import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 export class UserPayloadDto {

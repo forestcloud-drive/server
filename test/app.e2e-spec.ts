@@ -1,17 +1,18 @@
-import type { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
+import type { UserDto, UserPayloadDto } from '@app/shared/dtos';
 import type { INestApplication } from '@nestjs/common';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { Sequelize } from 'sequelize-typescript';
 import * as request from 'supertest';
 import type { App } from 'supertest/types';
-import { Sequelize } from 'sequelize-typescript';
-import { AppModule } from '../src/app.module';
-import type { SignupResponseDto } from '../src/auth/dto/signup-response.dto';
-import type { SigninResponseDto } from '../src/auth/dto/signin-response.dto';
-import type { GetAllUsersResponseDto } from '../src/admin/users/dto/get-all-users-response.dto';
-import type { UserDto, UserPayloadDto } from '@app/shared/dtos';
 import { v4 as uuidv4 } from 'uuid';
+
 import type { DeleteUserResponseDto } from '../src/admin/users/dto/delete-user-response.dto';
+import type { GetAllUsersResponseDto } from '../src/admin/users/dto/get-all-users-response.dto';
+import { AppModule } from '../src/app.module';
+import type { SigninResponseDto } from '../src/auth/dto/signin-response.dto';
+import type { SignupResponseDto } from '../src/auth/dto/signup-response.dto';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;

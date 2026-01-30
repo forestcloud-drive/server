@@ -1,3 +1,6 @@
+import { AccessPermission, User } from '@app/shared/decorators';
+import { FileDto, RejectResponseDto, UserPayloadDto } from '@app/shared/dtos';
+import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
 import {
   Body,
   Controller,
@@ -9,20 +12,18 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { DirectoriesService } from './directories.service';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileDto, RejectResponseDto, UserPayloadDto } from '@app/shared/dtos';
-import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
-import { CreateDirectoryBodyDto } from './dto/create-directory-body.dto';
+
 import { SetParentQueryDto } from '../files/dto/set-parent-query.dto';
-import { AccessPermission, User } from '@app/shared/decorators';
-import { GetFilesResponseDto } from './dto/get-files-response.dto';
+import { DirectoriesService } from './directories.service';
+import { CreateDirectoryBodyDto } from './dto/create-directory-body.dto';
 import { GetDirectoryParamDto } from './dto/get-directory-param.dto';
+import { GetFilesResponseDto } from './dto/get-files-response.dto';
 
 @ApiTags('Directories')
 @ApiBearerAuth()

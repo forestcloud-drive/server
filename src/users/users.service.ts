@@ -1,13 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
-import { UsersRepository } from './users.repository';
+import { toUserDto } from '@app/shared/builders';
 import { UserDto } from '@app/shared/dtos';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UserModel } from '../database/models/user.model';
+import { generateHash } from '@app/shared/utils';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+
+import { UserModel } from '../database/models/user.model';
 import { ChangeUserInfoBodyDto } from './dto/change-user-info-body.dto';
 import { ChangeUserPasswordBodyDto } from './dto/change-user-password-body.dto';
-import { toUserDto } from '@app/shared/builders';
-import { generateHash } from '@app/shared/utils';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {

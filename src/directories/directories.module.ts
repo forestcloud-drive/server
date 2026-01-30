@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
-import { DirectoriesService } from './directories.service';
-import { DirectoriesController } from './directories.controller';
-import { FilesRepository } from '../files/files.repository';
 import { ValidateParentFile } from '@app/shared/validators';
+import { Module } from '@nestjs/common';
+
+import { FilesRepository } from '../files/files.repository';
+import { DirectoriesController } from './directories.controller';
+import { DirectoriesService } from './directories.service';
 
 @Module({
   controllers: [DirectoriesController],

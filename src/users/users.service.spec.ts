@@ -1,17 +1,19 @@
-import type { TestingModule } from '@nestjs/testing';
-import { Test } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import { UsersRepository } from './users.repository';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { UserModel } from '../database/models/user.model';
-import { Sequelize } from 'sequelize-typescript';
-import type { CreateUserDto } from './dto/create-user.dto';
+import { afterEach } from 'node:test';
+
+import type { UserDto } from '@app/shared/dtos';
 import { UserRoles } from '@app/shared/enums';
 import { ForbiddenException } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import * as bcrypt from 'bcrypt';
-import type { UserDto } from '@app/shared/dtos';
-import { afterEach } from 'node:test';
+import { Sequelize } from 'sequelize-typescript';
+
 import { FileModel } from '../database/models/file.model';
+import { UserModel } from '../database/models/user.model';
+import type { CreateUserDto } from './dto/create-user.dto';
+import { UsersRepository } from './users.repository';
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

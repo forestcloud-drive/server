@@ -1,8 +1,9 @@
-import { AbstractRepository } from '@nestlize/repository';
-import { UserModel } from '../../database/models/user.model';
+import { UserRoles } from '@app/shared/enums';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { UserRoles } from '@app/shared/enums';
+import { AbstractRepository } from '@nestlize/repository';
+
+import { UserModel } from '../../database/models/user.model';
 
 @Injectable()
 export class AdminUserRepository extends AbstractRepository<UserModel> {

@@ -1,3 +1,5 @@
+import { UserRoles } from '@app/shared/enums';
+import { BaseModel } from '@nestlize/repository';
 import {
   AllowNull,
   Column,
@@ -8,9 +10,8 @@ import {
   Table,
   Unique,
 } from 'sequelize-typescript';
-import { UserRoles } from '@app/shared/enums';
+
 import { FileModel } from './file.model';
-import { BaseModel } from '@nestlize/repository';
 
 export interface UserCreationAttributes {
   fullname: string;
