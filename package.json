@@ -7,8 +7,8 @@
   "license": "MIT",
   "scripts": {
     "build": "nest build",
-    "fmt": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "fmt:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "fmt": "prettier --write \"{src,apps,libs,test}/**/*.ts\"",
+    "fmt:check": "prettier --check \"{src,apps,libs,test}/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",

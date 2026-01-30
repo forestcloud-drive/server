@@ -1,5 +1,5 @@
 import { EnvParams } from '@app/shared/enums';
-import { buildFileName } from '@app/shared/utils';
+import { createUniqueName } from '@app/shared/utils';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MulterModule as PlatformExpressMulter } from '@nestjs/platform-express';
@@ -12,7 +12,7 @@ import { diskStorage } from 'multer';
         storage: diskStorage({
           destination: config.getOrThrow<string>(EnvParams.UPLOADS_DEST),
           filename: (_req, file, callback) => {
-            const fileName = buildFileName(file);
+            const fileName = createUniqueName(file.originalname);
             callback(null, fileName);
           },
         }),
