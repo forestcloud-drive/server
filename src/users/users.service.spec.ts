@@ -11,6 +11,7 @@ import { Sequelize } from 'sequelize-typescript';
 
 import { FileModel } from '../database/models/file.model';
 import { UserModel } from '../database/models/user.model';
+import { SharedFilesModel } from '../database/models/shared-files.model';
 
 import type { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
@@ -26,13 +27,13 @@ describe('UsersService', () => {
       imports: [
         SequelizeModule.forRoot({
           dialect: 'sqlite',
-          models: [UserModel, FileModel],
+          models: [UserModel, FileModel, SharedFilesModel],
           storage: ':memory:',
           autoLoadModels: true,
           sync: { force: true },
           logging: false,
         }),
-        SequelizeModule.forFeature([UserModel, FileModel]),
+        SequelizeModule.forFeature([UserModel, FileModel, SharedFilesModel]),
       ],
       providers: [UsersService, UsersRepository],
     }).compile();

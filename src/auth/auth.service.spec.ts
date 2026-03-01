@@ -11,6 +11,7 @@ import { FileModel } from '../database/models/file.model';
 import { UserModel } from '../database/models/user.model';
 import { UsersRepository } from '../users/users.repository';
 import { UsersService } from '../users/users.service';
+import { SharedFilesModel } from '../database/models/shared-files.model';
 
 import { AuthService } from './auth.service';
 import type { SignupBodyDto } from './dto/signup-body.dto';
@@ -25,13 +26,13 @@ describe('UsersService', () => {
       imports: [
         SequelizeModule.forRoot({
           dialect: 'sqlite',
-          models: [UserModel, FileModel],
+          models: [UserModel, FileModel, SharedFilesModel],
           storage: ':memory:',
           autoLoadModels: true,
           sync: { force: true },
           logging: false,
         }),
-        SequelizeModule.forFeature([UserModel, FileModel]),
+        SequelizeModule.forFeature([UserModel, FileModel, SharedFilesModel]),
         JwtModule.register({
           secret: 'secret',
           signOptions: { expiresIn: '1m' },
