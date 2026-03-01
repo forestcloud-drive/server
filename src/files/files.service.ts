@@ -1,6 +1,6 @@
 import * as fs from 'node:fs/promises';
-
 import * as path from 'path';
+
 import { toFileDto } from '@app/shared/builders';
 import { FileDto } from '@app/shared/dtos';
 import { EnvParams } from '@app/shared/enums';
@@ -17,6 +17,7 @@ import e from 'express';
 import { Transaction } from 'sequelize';
 
 import { FileModel } from '../database/models/file.model';
+
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
 import { FilesRepository } from './files.repository';
 
@@ -84,7 +85,7 @@ export class FilesService {
       throw new BadRequestException('Unsafe path access');
     }
 
-    return await new Promise<FileDto>((resolve, reject) => {
+    return new Promise<FileDto>((resolve, reject) => {
       response.download(resolvedPath, file.originalName, (error: Error) => {
         if (error) {
           this.logger.error(`downloadFile: ${error}`);

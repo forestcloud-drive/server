@@ -12,6 +12,7 @@ import {
 } from 'sequelize-typescript';
 
 import { UserModel } from './user.model';
+import { SharedFilesModel } from './shared-files.model';
 
 export interface FileCreationAttributes {
   userId: string;
@@ -69,4 +70,7 @@ export class FileModel extends BaseModel<FileModel, FileCreationAttributes> {
 
   @HasMany(() => FileModel)
   declare children: FileModel[];
+
+  @HasMany(() => SharedFilesModel)
+  declare shared: SharedFilesModel[];
 }

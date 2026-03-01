@@ -7,6 +7,7 @@ import { Sequelize } from 'sequelize-typescript';
 
 import { FileModel } from '../../database/models/file.model';
 import { UserModel } from '../../database/models/user.model';
+
 import { AdminUserRepository } from './admin-user.repository';
 import { AdminUsersService } from './admin-users.service';
 

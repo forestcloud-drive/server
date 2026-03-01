@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import e from 'express';
+import { RequestContext } from '@app/shared/enums';
 
 import { FilesRepository } from '../../../../src/files/files.repository';
 
@@ -22,20 +23,21 @@ export class AccessPermissionGuard implements CanActivate {
     const request: e.Request = context.switchToHttp().getRequest();
     const user = extractUserFromRequest(request);
 
-    const paramName = this.reflector.getAllAndOverride<string>(
-      ACCESS_PERMISSION_KEY,
-      [context.getHandler(), context.getClass()],
-    );
+    const { accessToId, context: ctx } = this.reflector.getAllAndOverride<{
+      accessToId: string;
+      context: RequestContext;
+    }>(ACCESS_PERMISSION_KEY, [context.getHandler(), context.getClass()]);
 
-    const accessToId = request.params[paramName];
+    const bucket = request[ctx] as Record<string, unknown> | undefined;
+    const fileId = bucket?.[accessToId] as string | undefined;
 
-    if (!accessToId) {
+    if (!fileId) {
       return true;
     }
 
     const foundRecord = await this.filesRepository.findOne(
       {
-        fileId: accessToId,
+        fileId: fileId,
       },
       {
         paranoid: false,
@@ -44,7 +46,7 @@ export class AccessPermissionGuard implements CanActivate {
 
     if (!foundRecord) {
       throw new NotFoundException(
-        `File or directory not found by ${accessToId} id`,
+        `File or directory not found by ${fileId} id`,
       );
     }
 

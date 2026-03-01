@@ -11,6 +11,7 @@ import { FileModel } from '../database/models/file.model';
 import { UserModel } from '../database/models/user.model';
 import { UsersRepository } from '../users/users.repository';
 import { UsersService } from '../users/users.service';
+
 import { AuthService } from './auth.service';
 import type { SignupBodyDto } from './dto/signup-body.dto';
 

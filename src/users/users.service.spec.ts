@@ -11,6 +11,7 @@ import { Sequelize } from 'sequelize-typescript';
 
 import { FileModel } from '../database/models/file.model';
 import { UserModel } from '../database/models/user.model';
+
 import type { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
