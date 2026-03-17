@@ -1,5 +1,3 @@
-import { describe } from 'node:test';
-
 import type { INestApplication } from '@nestjs/common';
 import type { App } from 'supertest/types';
 import type { Sequelize } from 'sequelize-typescript';
@@ -10,8 +8,6 @@ import type { Container } from '../../../test/types/container.type';
 describe('SharedFiles (e2e)', () => {
   let app: INestApplication<App>;
   let sequelize: Sequelize;
-  let auth_token: string;
-  let server: App;
   let container: Container;
 
   beforeAll(async () => {
