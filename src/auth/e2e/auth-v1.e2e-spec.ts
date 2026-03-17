@@ -15,10 +15,10 @@ describe('Authorization (e2e)', () => {
   let container: Container;
 
   beforeAll(async () => {
-    container = await TestContainer.initApp();
-    sequelize = container.sequelize;
-    app = container.app;
-    server = container.server;
+    container = await TestContainer.initialize();
+    sequelize = container.getSequelize();
+    app = container.getApp();
+    server = container.getServer();
   });
 
   afterAll(async () => {

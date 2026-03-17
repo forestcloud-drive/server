@@ -22,10 +22,10 @@ describe('SharedFiles (e2e)', () => {
   let fileId: string;
 
   beforeAll(async () => {
-    container = await TestContainer.initApp();
-    sequelize = container.sequelize;
-    app = container.app;
-    server = container.server;
+    container = await TestContainer.initialize();
+    sequelize = container.getSequelize();
+    app = container.getApp();
+    server = container.getServer();
 
     const owner = await TestContainer.authenticateUser(UserRoles.OWNER);
     const user = await TestContainer.authenticateUser(UserRoles.USER);
@@ -38,6 +38,7 @@ describe('SharedFiles (e2e)', () => {
   afterAll(async () => {
     await sequelize.truncate();
     await sequelize.drop();
+    await container.cleanUploads();
     await app.close();
   });
 

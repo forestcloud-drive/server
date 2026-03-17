@@ -1,3 +1,5 @@
+import * as fs from 'fs/promises';
+
 import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import { Sequelize } from 'sequelize-typescript';
@@ -21,26 +23,29 @@ import type { SignupResponseDto } from '../src/auth/dto/signup-response.dto';
 
 import type { Container } from './types/container.type';
 
-export class TestContainer {
-  private static _app: INestApplication<App> | null = null;
+class TestContainerClass implements Container {
+  private _app?: INestApplication<App>;
+  private _sequelize?: Sequelize;
+  private _server?: App;
 
-  public static async initApp(): Promise<Container> {
+  constructor() {}
+
+  public async initialize(): Promise<Container> {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    const app = moduleFixture.createNestApplication<INestApplication<App>>();
-    const server: App = app.getHttpServer();
-    const sequelize = app.get<Sequelize>(Sequelize);
+    this._app = moduleFixture.createNestApplication<INestApplication<App>>();
 
-    this._app = app;
+    this._server = this._app.getHttpServer();
+    this._sequelize = this._app.get<Sequelize>(Sequelize);
 
-    app.setGlobalPrefix('api');
-    app.enableVersioning({
+    this._app.setGlobalPrefix('api');
+    this._app.enableVersioning({
       type: VersioningType.URI,
       prefix: 'v',
     });
-    app.useGlobalPipes(
+    this._app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
         stopAtFirstError: true,
@@ -51,12 +56,36 @@ export class TestContainer {
       }),
     );
 
-    await app.init();
+    await this._app.init();
 
-    return { app, server, sequelize };
+    return this;
   }
 
-  public static async authenticateUser(
+  public getApp(): INestApplication<App> {
+    if (!this._app) {
+      throw new Error('TestContainer not initialized. Call initialize() first');
+    }
+
+    return this._app;
+  }
+
+  public getSequelize(): Sequelize {
+    if (!this._sequelize) {
+      throw new Error('TestContainer not initialized. Call initialize() first');
+    }
+
+    return this._sequelize;
+  }
+
+  public getServer(): App {
+    if (!this._server) {
+      throw new Error('TestContainer not initialized. Call initialize() first');
+    }
+
+    return this._server;
+  }
+
+  public async authenticateUser(
     role: UserRoles,
     hasAccess: boolean = true,
   ): Promise<SignupResponseDto> {
@@ -96,4 +125,23 @@ export class TestContainer {
 
     return { auth_token: authToken, user: createdUser };
   }
+
+  public async cleanUploads(): Promise<void> {
+    const config = this._app?.get(ConfigService);
+    const uploadsPath = config?.get<string>(EnvParams.UPLOADS_DEST);
+
+    if (!uploadsPath) {
+      throw new Error('Cannot get uploads path');
+    }
+
+    try {
+      await fs.rm(uploadsPath, { recursive: true, force: true });
+      await fs.mkdir(uploadsPath, { recursive: true });
+    } catch (error) {
+      console.error(`Failed to clean uploads directory: `, error);
+      process.exit(1);
+    }
+  }
 }
+
+export const TestContainer = new TestContainerClass();
