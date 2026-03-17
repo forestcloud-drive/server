@@ -72,7 +72,7 @@ export class SharedFilesService {
       await this.sharedFileRepository.getSharedFileByFileId(fileId);
 
     if (sharedFile.userId === userId) {
-      return toFileDto(sharedFile.file);
+      return this.downloadFile(sharedFile.file, response);
     }
 
     const hasAccess = await this.checkAccess(userId, sharedFile.file.parentId!);

@@ -6,6 +6,7 @@ export class SharedFileDto {
   @ApiProperty({ example: '0197d0ae-ab4a-7bf3-a32e-4fe889c2e2db' })
   fileId!: string;
 
+  @Expose()
   @ApiProperty({ example: '0197d0ae-ab4a-7bf3-a32e-4fe889c2e2db' })
   userId!: string;
 }

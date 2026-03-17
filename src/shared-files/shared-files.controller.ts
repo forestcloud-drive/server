@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpStatus,
   Param,
   Post,
@@ -120,6 +121,7 @@ export class SharedFilesController {
 
   // TODO share with multiple users at one time
   @Delete(':fileId')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @AccessPermission<GetFileParamsDto>('fileId', RequestContext.BODY)
   @UseGuards(AccessPermissionGuard)
   @ApiOperation({
