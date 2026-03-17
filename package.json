@@ -120,7 +120,8 @@
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/src/",
-      "<rootDir>/libs/"
+      "<rootDir>/libs/",
+      "<rootDir>/test/unit"
     ],
     "moduleNameMapper": {
       "^@app/shared(|/.*)$": "<rootDir>/libs/shared/src/$1"
