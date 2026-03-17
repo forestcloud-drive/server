@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { FilesDownloadService } from '@app/shared/services';
 
 import { FilesModule } from '../files/files.module';
 
@@ -9,6 +10,6 @@ import { SharedFilesRepository } from './shared-files.repository';
 @Module({
   imports: [FilesModule],
   controllers: [SharedFilesController],
-  providers: [SharedFilesService, SharedFilesRepository],
+  providers: [SharedFilesService, SharedFilesRepository, FilesDownloadService],
 })
 export class SharedFilesModule {}
