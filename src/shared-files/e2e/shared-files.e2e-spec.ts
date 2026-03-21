@@ -65,13 +65,13 @@ describe('SharedFiles (e2e)', () => {
         .set('Authorization', `Bearer ${ownerToken}`)
         .send({
           fileId,
-          userId,
+          userIds: [userId],
         });
 
       expect(res.status).toBe(201);
-      const body = res.body as SharedFileDto;
-      expect(body.fileId).toBe(fileId);
-      expect(body.userId).toBe(userId);
+      const body = res.body as SharedFileDto[];
+      expect(body[0].fileId).toBe(fileId);
+      expect(body[0].userId).toBe(userId);
     });
 
     it('should see shared file in recipient list', async () => {
@@ -95,11 +95,11 @@ describe('SharedFiles (e2e)', () => {
 
     it('should unshare file', async () => {
       const res = await request(server)
-        .delete(`/api/v1/shared/${fileId}`)
+        .delete(`/api/v1/shared`)
         .set('Authorization', `Bearer ${ownerToken}`)
         .send({
           fileId,
-          userId,
+          userIds: [userId],
         });
 
       expect(res.status).toBe(204);

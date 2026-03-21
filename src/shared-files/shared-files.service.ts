@@ -1,14 +1,10 @@
-import {
-  ForbiddenException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, HttpStatus, Injectable } from '@nestjs/common';
 import { FileDto, SharedFileDto } from '@app/shared/dtos';
 import { toFileDto, toSharedFileDto } from '@app/shared/builders';
 import e from 'express';
 import { FilesDownloadService } from '@app/shared/services';
 import { MimeTypes } from '@app/shared/enums';
+import { Op } from 'sequelize';
 
 import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
 import { FilesRepository } from '../files/files.repository';
@@ -23,13 +19,15 @@ export class SharedFilesService {
     private readonly downloadsService: FilesDownloadService,
   ) {}
 
-  public async create(fileId: string, userId: string): Promise<SharedFileDto> {
-    const shared = await this.sharedFileRepository.create({
-      fileId,
-      userId,
-    });
+  public async create(
+    fileId: string,
+    userIds: string[],
+  ): Promise<SharedFileDto[]> {
+    const sharedDtos = userIds.map((userId) => ({ userId, fileId }));
 
-    return toSharedFileDto(shared);
+    const shared = await this.sharedFileRepository.insertMany(sharedDtos);
+
+    return shared.map(toSharedFileDto);
   }
 
   public async findAll(
@@ -80,18 +78,10 @@ export class SharedFilesService {
     return this.downloadsService.downloadFile(sharedFile.file, response);
   }
 
-  public async remove(fileId: string, userId: string): Promise<HttpStatus> {
-    const file = await this.sharedFileRepository.findOne({
+  public async remove(fileId: string, userIds: string[]): Promise<HttpStatus> {
+    await this.sharedFileRepository.deleteAll({
       fileId,
-      userId,
-    });
-
-    if (!file) {
-      throw new NotFoundException();
-    }
-
-    await this.sharedFileRepository.deleteByPk(file.id, {
-      force: true,
+      userId: { [Op.in]: userIds },
     });
 
     return HttpStatus.NO_CONTENT;

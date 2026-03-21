@@ -47,7 +47,6 @@ import { SharedFilesService } from './shared-files.service';
 export class SharedFilesController {
   constructor(private readonly sharedFilesService: SharedFilesService) {}
 
-  // TODO share with multiple users at one time
   @Post()
   @UseGuards(AccessPermissionGuard)
   @AccessPermission<CreateSharedFileDto>('fileId', RequestContext.BODY)
@@ -56,16 +55,16 @@ export class SharedFilesController {
   })
   @ApiResponse({
     status: 200,
-    type: SharedFileDto,
+    type: [SharedFileDto],
   })
   @ApiResponse({
     status: 400,
     type: RejectResponseDto,
   })
   public create(
-    @Body() { fileId, userId }: CreateSharedFileDto,
-  ): Promise<SharedFileDto> {
-    return this.sharedFilesService.create(fileId, userId);
+    @Body() { fileId, userIds }: CreateSharedFileDto,
+  ): Promise<SharedFileDto[]> {
+    return this.sharedFilesService.create(fileId, userIds);
   }
 
   @Get()
@@ -119,8 +118,7 @@ export class SharedFilesController {
     return this.sharedFilesService.download(fileId, userId, response);
   }
 
-  // TODO share with multiple users at one time
-  @Delete(':fileId')
+  @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
   @AccessPermission<GetFileParamsDto>('fileId', RequestContext.BODY)
   @UseGuards(AccessPermissionGuard)
@@ -129,7 +127,6 @@ export class SharedFilesController {
   })
   @ApiResponse({
     status: 200,
-    type: FileDto,
   })
   @ApiResponse({
     status: 400,
@@ -140,8 +137,8 @@ export class SharedFilesController {
     type: RejectResponseDto,
   })
   public remove(
-    @Body() { fileId, userId }: CreateSharedFileDto,
+    @Body() { fileId, userIds }: CreateSharedFileDto,
   ): Promise<HttpStatus> {
-    return this.sharedFilesService.remove(fileId, userId);
+    return this.sharedFilesService.remove(fileId, userIds);
   }
 }

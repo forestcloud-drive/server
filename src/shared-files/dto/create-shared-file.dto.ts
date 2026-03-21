@@ -1,4 +1,11 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  ArrayUnique,
+  IsArray,
+  IsNotEmpty,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateSharedFileDto {
@@ -8,9 +15,11 @@ export class CreateSharedFileDto {
   @ApiProperty({ example: '0197d0ae-ab4a-7bf3-a32e-4fe889c2e2db' })
   fileId!: string;
 
-  @IsUUID()
-  @IsString()
+  @IsArray()
+  @ArrayNotEmpty()
+  @ArrayUnique()
+  @IsUUID('4', { each: true })
   @IsNotEmpty()
-  @ApiProperty({ example: '0197d0ae-ab4a-7bf3-a32e-4fe889c2e2db' })
-  userId!: string;
+  @ApiProperty({ example: ['0197d0ae-ab4a-7bf3-a32e-4fe889c2e2db'] })
+  userIds!: string[];
 }
