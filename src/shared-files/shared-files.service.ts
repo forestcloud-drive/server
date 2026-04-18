@@ -226,4 +226,8 @@ export class SharedFilesService {
 
     return sharedFile;
   }
+
+  public async deleteExpiredLinks(): Promise<number> {
+    return this.shareLinkRepository.deleteExpiredLinks();
+  }
 }

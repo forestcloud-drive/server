@@ -27,6 +27,7 @@ import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
 import { AccessPermission, User } from '@app/shared/decorators';
 import { RequestContext } from '@app/shared/enums';
 import e from 'express';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
 import { SetParentQueryDto } from '../files/dto/set-parent-query.dto';
@@ -209,5 +210,10 @@ export class SharedFilesController {
     @Body() { fileId, userIds }: CreateSharedFileDto,
   ): Promise<HttpStatus> {
     return this.sharedFilesService.remove(fileId, userIds);
+  }
+
+  @Cron(CronExpression.EVERY_HOUR)
+  public async deleteExpiredLinks(): Promise<void> {
+    await this.sharedFilesService.deleteExpiredLinks();
   }
 }
