@@ -5,6 +5,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
 import { UserModel } from '../database/models/user.model';
+
 import { ChangeUserInfoBodyDto } from './dto/change-user-info-body.dto';
 import { ChangeUserPasswordBodyDto } from './dto/change-user-password-body.dto';
 import { CreateUserDto } from './dto/create-user.dto';

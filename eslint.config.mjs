@@ -44,7 +44,12 @@ export default tseslint.config(
           prefer: 'type-imports',
         },
       ],
-      'import/order': 'error'
+      'import/order': [
+        'error',
+        {
+          'newlines-between': 'always',
+        },
+      ],
     },
   },
 );

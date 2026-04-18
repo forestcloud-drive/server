@@ -10,6 +10,7 @@ import { FilesModule } from './files/files.module';
 import { LoggerModule } from './logger/logger.module';
 import { MulterModule } from './multer/multer.module';
 import { UsersModule } from './users/users.module';
+import { SharedFilesModule } from './shared-files/shared-files.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { UsersModule } from './users/users.module';
     FilesModule,
     MulterModule,
     DirectoriesModule,
+    SharedFilesModule,
   ],
 })
 export class AppModule {}
