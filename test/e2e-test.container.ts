@@ -15,6 +15,7 @@ import { EnvParams } from '@app/shared/enums';
 import { getModelToken } from '@nestjs/sequelize';
 import { generateHash } from '@app/shared/utils';
 import { JwtService } from '@nestjs/jwt';
+import { useContainer } from 'class-validator';
 
 import { UserModel } from '../src/database/models/user.model';
 import type { CreateUserDto } from '../src/users/dto/create-user.dto';
@@ -55,6 +56,11 @@ class TestContainerClass implements Container {
         forbidNonWhitelisted: true,
       }),
     );
+
+    useContainer(this._app.select(AppModule), {
+      fallback: true,
+      fallbackOnErrors: true,
+    });
 
     await this._app.init();
 

@@ -35,6 +35,8 @@ import { GetFileParamsDto } from '../files/dto/get-file-params.dto';
 
 import { CreateSharedFileDto } from './dto/create-shared-file.dto';
 import { SharedFilesService } from './shared-files.service';
+import { ShareLinkResponseDto } from './dto/share-link-response.dto';
+import { CreateShareLinkBodyDto } from './dto/create-share-link-body.dto';
 
 @ApiTags('Shared files and directories')
 @ApiBearerAuth()
@@ -67,6 +69,26 @@ export class SharedFilesController {
     return this.sharedFilesService.create(fileId, userIds);
   }
 
+  @Post('link')
+  @UseGuards(AccessPermissionGuard)
+  @AccessPermission<CreateSharedFileDto>('fileId', RequestContext.BODY)
+  @ApiOperation({
+    summary: 'Share file or directory',
+  })
+  @ApiResponse({
+    status: 200,
+    type: ShareLinkResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  public shareLink(
+    @Body() { fileId, ttl = 3600 }: CreateShareLinkBodyDto,
+  ): Promise<ShareLinkResponseDto> {
+    return this.sharedFilesService.createShareLink(fileId, ttl);
+  }
+
   @Get()
   @ApiOperation({
     summary: 'Get all files shared with current user',
@@ -85,9 +107,29 @@ export class SharedFilesController {
   })
   public findAll(
     @User() { userId }: UserPayloadDto,
-    @Query() { parentId }: SetParentQueryDto,
+    @Query() { parentId, link: shareLinkId }: SetParentQueryDto,
   ): Promise<GetFilesResponseDto> {
-    return this.sharedFilesService.findAll(userId, parentId);
+    return this.sharedFilesService.findAll(userId, parentId, shareLinkId);
+  }
+
+  @Get(':fileId')
+  @ApiOperation({
+    summary: 'Get shared file by sharelink id',
+  })
+  @ApiResponse({
+    status: 200,
+    type: FileDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    type: RejectResponseDto,
+  })
+  public findOne(@Param() { fileId }: GetFileParamsDto): Promise<FileDto> {
+    return this.sharedFilesService.findOne(fileId);
   }
 
   @Get('download/:fileId')
@@ -116,6 +158,33 @@ export class SharedFilesController {
     @Res() response: e.Response,
   ): Promise<FileDto> {
     return this.sharedFilesService.download(fileId, userId, response);
+  }
+
+  @Get('download/link/:fileId')
+  @ApiOperation({
+    summary: 'Download shared with current user file',
+  })
+  @ApiResponse({
+    status: 200,
+    type: FileDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 500,
+    type: RejectResponseDto,
+  })
+  downloadFileBySharedLink(
+    @Param() { fileId }: DownloadFileParamsDto,
+    @Res() response: e.Response,
+  ): Promise<FileDto> {
+    return this.sharedFilesService.downloadByLink(fileId, response);
   }
 
   @Delete()

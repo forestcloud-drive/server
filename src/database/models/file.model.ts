@@ -13,6 +13,7 @@ import {
 
 import { UserModel } from './user.model';
 import { SharedFilesModel } from './shared-files.model';
+import { ShareLinkModel } from './share-link.model';
 
 export interface FileCreationAttributes {
   userId: string;
@@ -73,4 +74,7 @@ export class FileModel extends BaseModel<FileModel, FileCreationAttributes> {
 
   @HasMany(() => SharedFilesModel)
   declare shared: SharedFilesModel[];
+
+  @HasMany(() => ShareLinkModel)
+  declare share_links: ShareLinkModel[];
 }
