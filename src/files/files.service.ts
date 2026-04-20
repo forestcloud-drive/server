@@ -13,6 +13,10 @@ import {
 import e from 'express';
 import { Transaction } from 'sequelize';
 import { FilesDownloadService } from '@app/shared/services';
+import { useInnerError } from '@app/shared/helpers';
+
+import { SharedFilesRepository } from '../shared-files/shared-files.repository';
+import { ShareLinkRepository } from '../shared-files/share-link.repository';
 
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
 import { FilesRepository } from './files.repository';
@@ -24,6 +28,8 @@ export class FilesService {
   constructor(
     private readonly filesRepository: FilesRepository,
     private readonly downloadsService: FilesDownloadService,
+    private readonly sharedFilesRepository: SharedFilesRepository,
+    private readonly shareLinksRepository: ShareLinkRepository,
   ) {}
 
   public async uploadFiles(
@@ -112,6 +118,8 @@ export class FilesService {
       throw new NotFoundException(`File not found by ${fileId} id`);
     }
 
+    await this.deleteSharings(trashedFile.fileId);
+
     return toFileDto(trashedFile);
   }
 
@@ -148,6 +156,30 @@ export class FilesService {
       force: true,
     });
 
-    return toFileDto(deletedFile!);
+    if (!deletedFile) {
+      this.logger.error(useInnerError('FDE'));
+      throw new InternalServerErrorException('Something went wrong');
+    }
+
+    await this.deleteSharings(deletedFile.fileId);
+
+    return toFileDto(deletedFile);
+  }
+
+  public async deleteSharings(fileId: string): Promise<void> {
+    const sharedFile = await this.sharedFilesRepository.findOne({
+      fileId,
+    });
+    const shareLink = await this.shareLinksRepository.findOne({
+      fileId,
+    });
+
+    if (sharedFile) {
+      await this.sharedFilesRepository.deleteByPk(sharedFile.fileId);
+    }
+
+    if (shareLink) {
+      await this.shareLinksRepository.deleteByPk(shareLink.fileId);
+    }
   }
 }
