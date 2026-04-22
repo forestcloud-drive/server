@@ -100,4 +100,22 @@ export class DirectoriesService {
 
     return toFileDto(deletedDirectory);
   }
+
+  public async moveDirectory(
+    directoryId: string,
+    targetDir: string,
+  ): Promise<FileDto> {
+    const parentId = targetDir === 'root' ? null : targetDir;
+
+    const updatedDirectory = await this.filesRepository.updateByPk(
+      directoryId,
+      { parentId },
+    );
+
+    if (!updatedDirectory) {
+      throw new NotFoundException(`Directory not found by id ${directoryId}`);
+    }
+
+    return toFileDto(updatedDirectory);
+  }
 }
