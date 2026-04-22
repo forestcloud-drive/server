@@ -182,4 +182,18 @@ export class FilesService {
       await this.shareLinksRepository.deleteByPk(shareLink.fileId);
     }
   }
+
+  public async moveFile(fileId: string, targetDir: string): Promise<FileDto> {
+    const parentId = targetDir === 'root' ? null : targetDir;
+
+    const updatedDirectory = await this.filesRepository.updateByPk(fileId, {
+      parentId,
+    });
+
+    if (!updatedDirectory) {
+      throw new NotFoundException(`Directory not found by id ${fileId}`);
+    }
+
+    return toFileDto(updatedDirectory);
+  }
 }

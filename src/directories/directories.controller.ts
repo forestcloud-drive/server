@@ -18,12 +18,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { RequestContext } from '@app/shared/enums';
 
 import { SetParentQueryDto } from '../files/dto/set-parent-query.dto';
 
 import { DirectoriesService } from './directories.service';
 import { CreateDirectoryBodyDto } from './dto/create-directory-body.dto';
 import { GetDirectoryParamDto } from './dto/get-directory-param.dto';
+import { MoveFileBodyDto } from './dto/move-file-body.dto';
 import { GetFilesResponseDto } from './dto/get-files-response.dto';
 
 @ApiTags('Directories')
@@ -107,6 +109,32 @@ export class DirectoriesController {
     @Body() { dirname }: CreateDirectoryBodyDto,
   ): Promise<FileDto> {
     return this.directoriesService.renameDirectory(directoryId, dirname);
+  }
+
+  @Put(':directoryId/move')
+  @AccessPermission<GetDirectoryParamDto>('directoryId')
+  @AccessPermission<MoveFileBodyDto>('targetDir', RequestContext.BODY)
+  @UseGuards(AccessPermissionGuard)
+  @ApiOperation({
+    summary: 'Move directory',
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 200,
+    type: FileDto,
+  })
+  public moveDirectory(
+    @Param() { directoryId }: GetDirectoryParamDto,
+    @Body() { targetDir }: MoveFileBodyDto,
+  ): Promise<FileDto> {
+    return this.directoriesService.moveDirectory(directoryId, targetDir);
   }
 
   @Put(':directoryId/trash')
