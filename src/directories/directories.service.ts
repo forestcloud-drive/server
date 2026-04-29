@@ -90,7 +90,12 @@ export class DirectoriesService {
       }
     }
 
-    const deletedDirectory = await this.filesRepository.deleteByPk(directoryId);
+    const deletedDirectory = await this.filesRepository.deleteByPk(
+      directoryId,
+      {
+        force: true,
+      },
+    );
 
     if (!deletedDirectory) {
       throw new NotFoundException(`Directory not found by ${directoryId} id`);
