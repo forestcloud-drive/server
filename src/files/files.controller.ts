@@ -32,6 +32,7 @@ import e from 'express';
 import { RequestContext } from '@app/shared/enums';
 
 import { MoveFileBodyDto } from '../directories/dto/move-file-body.dto';
+import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
 
 import { DownloadFileParamsDto } from './dto/download-file-params.dto';
 import { GetFileParamsDto } from './dto/get-file-params.dto';
@@ -50,6 +51,31 @@ import { FilesService } from './files.service';
 @Controller({ path: 'files', version: '1' })
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
+
+  @Get('trash')
+  @ApiOperation({
+    summary: 'Get trashed files',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GetFilesResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    type: RejectResponseDto,
+  })
+  public async getTrashedFiles(
+    @Query() { parentId }: SetParentQueryDto,
+    @User('userId') userId: string,
+  ): Promise<GetFilesResponseDto> {
+    const files = await this.filesService.getTrashedFiles(userId, parentId);
+
+    return { files };
+  }
 
   @Post('upload')
   @UseInterceptors(

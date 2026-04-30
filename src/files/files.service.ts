@@ -11,7 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import e from 'express';
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { FilesDownloadService } from '@app/shared/services';
 import { useInnerError } from '@app/shared/helpers';
 
@@ -195,5 +195,23 @@ export class FilesService {
     }
 
     return toFileDto(updatedDirectory);
+  }
+
+  public async getTrashedFiles(
+    userId: string,
+    parentId?: string,
+  ): Promise<FileDto[]> {
+    const files = await this.filesRepository.findAll(
+      {
+        deletedAt: {
+          [Op.not]: null,
+        },
+        parentId: parentId ?? null,
+        userId,
+      },
+      { paranoid: false },
+    );
+
+    return files.map(toFileDto);
   }
 }
