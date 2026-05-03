@@ -203,9 +203,13 @@ export class FilesService {
   ): Promise<FileDto[]> {
     const files = await this.filesRepository.findAll(
       {
-        deletedAt: {
-          [Op.not]: null,
-        },
+        ...(parentId
+          ? {}
+          : {
+              deletedAt: {
+                [Op.not]: null,
+              },
+            }),
         parentId: parentId ?? null,
         userId,
       },

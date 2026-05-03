@@ -40,6 +40,7 @@ import { SetParentQueryDto } from './dto/set-parent-query.dto';
 import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
 import { FilesService } from './files.service';
+import { SetTrashedParentQueryDto } from './dto/set-trashed-parent-query.dto';
 
 @ApiTags('Files')
 @ApiBearerAuth()
@@ -69,7 +70,7 @@ export class FilesController {
     type: RejectResponseDto,
   })
   public async getTrashedFiles(
-    @Query() { parentId }: SetParentQueryDto,
+    @Query() { parentId }: SetTrashedParentQueryDto,
     @User('userId') userId: string,
   ): Promise<GetFilesResponseDto> {
     const files = await this.filesService.getTrashedFiles(userId, parentId);
