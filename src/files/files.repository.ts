@@ -1,20 +1,18 @@
-import { AbstractRepository } from 'nest-sequelize-repository';
-import { FileModel } from '../database/models/file.model';
-import { InjectModel } from '@nestjs/sequelize';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { createUniqueName } from '@app/shared/utils';
 import { MimeTypes } from '@app/shared/enums';
+import { createUniqueName } from '@app/shared/utils';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { AbstractRepository } from '@nestlize/repository';
 import { Transaction } from 'sequelize';
+
+import { FileModel } from '../database/models/file.model';
 
 @Injectable()
 export class FilesRepository extends AbstractRepository<FileModel> {
   constructor(
     @InjectModel(FileModel) private readonly fileModel: typeof FileModel,
   ) {
-    super(fileModel, {
-      autoGenerateId: true,
-      idField: 'fileId',
-    });
+    super(fileModel);
   }
 
   public async saveFileMetadata(

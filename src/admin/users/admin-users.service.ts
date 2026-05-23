@@ -1,13 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserDto } from '@app/shared/dtos';
 import { toUserDto } from '@app/shared/builders';
+import { UserDto } from '@app/shared/dtos';
+import { UserRoles } from '@app/shared/enums';
+import { generateHash } from '@app/shared/utils';
+import { Injectable, NotFoundException } from '@nestjs/common';
+
+import { ChangeUserInfoBodyDto } from '../../users/dto/change-user-info-body.dto';
+
 import { AdminUserRepository } from './admin-user.repository';
 import { AddNewUserBodyDto } from './dto/add-new-user-body.dto';
 import { DeleteUserResponseDto } from './dto/delete-user-response.dto';
-import { UserRoles } from '@app/shared/enums';
 import { GetAllUsersResponseDto } from './dto/get-all-users-response.dto';
-import { generateHash } from '@app/shared/utils';
-import { ChangeUserInfoBodyDto } from '../../users/dto/change-user-info-body.dto';
 
 @Injectable()
 export class AdminUsersService {

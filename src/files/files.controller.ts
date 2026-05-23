@@ -1,4 +1,12 @@
+import { AccessPermission, User } from '@app/shared/decorators';
+import { FileDto, RejectResponseDto } from '@app/shared/dtos';
+import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
 import {
+  FilesValidationInterceptor,
+  RollbackUploadInterceptor,
+} from '@app/shared/interceptors';
+import {
+  Body,
   Controller,
   Delete,
   Get,
@@ -11,7 +19,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesService } from './files.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -20,20 +28,20 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileDto, RejectResponseDto } from '@app/shared/dtos';
-import { AccessPermissionGuard, JwtGuard } from '@app/shared/guards';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import {
-  FilesValidationInterceptor,
-  RollbackUploadInterceptor,
-} from '@app/shared/interceptors';
-import { AccessPermission, User } from '@app/shared/decorators';
-import { DownloadFileParamsDto } from './dto/download-file-params.dto';
 import e from 'express';
-import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
-import { SetParentQueryDto } from './dto/set-parent-query.dto';
+import { RequestContext } from '@app/shared/enums';
+
+import { MoveFileBodyDto } from '../directories/dto/move-file-body.dto';
+import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
+
+import { DownloadFileParamsDto } from './dto/download-file-params.dto';
 import { GetFileParamsDto } from './dto/get-file-params.dto';
+import { SetParentQueryDto } from './dto/set-parent-query.dto';
+import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
+import { FilesService } from './files.service';
+import { SetTrashedParentQueryDto } from './dto/set-trashed-parent-query.dto';
+import { SearchFileQueryDto } from './dto/search-file-query.dto';
 
 @ApiTags('Files')
 @ApiBearerAuth()
@@ -45,6 +53,51 @@ import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
 @Controller({ path: 'files', version: '1' })
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Search files by title',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GetFilesResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  public async searchByTitle(
+    @Query() { title }: SearchFileQueryDto,
+  ): Promise<GetFilesResponseDto> {
+    const files = await this.filesService.searchByTitle(title);
+
+    return { files };
+  }
+
+  @Get('trash')
+  @ApiOperation({
+    summary: 'Get trashed files',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GetFilesResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 404,
+    type: RejectResponseDto,
+  })
+  public async getTrashedFiles(
+    @Query() { parentId }: SetTrashedParentQueryDto,
+    @User('userId') userId: string,
+  ): Promise<GetFilesResponseDto> {
+    const files = await this.filesService.getTrashedFiles(userId, parentId);
+
+    return { files };
+  }
 
   @Post('upload')
   @UseInterceptors(
@@ -71,6 +124,32 @@ export class FilesController {
     @User('userId') userId: string,
   ): Promise<UploadFilesResponseDto> {
     return this.filesService.uploadFiles(files, userId, parentId);
+  }
+
+  @Put(':fileId/move')
+  @AccessPermission<GetFileParamsDto>('fileId')
+  @AccessPermission<MoveFileBodyDto>('targetDir', RequestContext.BODY)
+  @UseGuards(AccessPermissionGuard)
+  @ApiOperation({
+    summary: 'Move file',
+  })
+  @ApiResponse({
+    status: 200,
+    type: FileDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    type: RejectResponseDto,
+  })
+  public moveFile(
+    @Param() { fileId }: GetFileParamsDto,
+    @Body() { targetDir }: MoveFileBodyDto,
+  ): Promise<FileDto> {
+    return this.filesService.moveFile(fileId, targetDir);
   }
 
   @Put(':fileId/trash')

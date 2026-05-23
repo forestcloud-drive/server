@@ -1,3 +1,5 @@
+import { UserRoles } from '@app/shared/enums';
+import { extractUserFromRequest } from '@app/shared/utils';
 import {
   BadRequestException,
   CanActivate,
@@ -7,10 +9,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { extractUserFromRequest } from '@app/shared/utils';
 import e from 'express';
+
 import { AdminUserRepository } from '../../../../src/admin/users/admin-user.repository';
-import { UserRoles } from '@app/shared/enums';
 
 @Injectable()
 export class OperateOnUserPermissionGuard implements CanActivate {

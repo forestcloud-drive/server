@@ -3,6 +3,7 @@ import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import importPlugin from 'eslint-plugin-import';
 
 export default tseslint.config(
   {
@@ -26,18 +27,27 @@ export default tseslint.config(
     },
   },
   {
+    plugins: {
+      'import': importPlugin,
+    },
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       'newline-before-return': 'error',
-      "@typescript-eslint/no-unused-vars": "warn",
-      "@typescript-eslint/no-shadow": "off",
-      "@typescript-eslint/explicit-function-return-type": "error",
-      "@typescript-eslint/consistent-type-imports": [
-        "error",
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-shadow': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
         {
-          "prefer": "type-imports",
+          prefer: 'type-imports',
+        },
+      ],
+      'import/order': [
+        'error',
+        {
+          'newlines-between': 'always',
         },
       ],
     },

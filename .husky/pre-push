@@ -1,2 +1,2 @@
 pnpm build
-pnpm test --passWithNoTests
+pnpm test:e2e:new

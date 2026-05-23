@@ -1,13 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateDirectoryBodyDto } from './dto/create-directory-body.dto';
-import { FileDto } from '@app/shared/dtos';
 import { toFileDto } from '@app/shared/builders';
+import { FileDto } from '@app/shared/dtos';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { MimeTypes } from '@app/shared/enums';
+
 import { FilesRepository } from '../files/files.repository';
+import { FilesService } from '../files/files.service';
+
+import { CreateDirectoryBodyDto } from './dto/create-directory-body.dto';
 import { GetFilesResponseDto } from './dto/get-files-response.dto';
 
 @Injectable()
 export class DirectoriesService {
-  constructor(private readonly filesRepository: FilesRepository) {}
+  constructor(
+    private readonly filesRepository: FilesRepository,
+    private readonly filesService: FilesService,
+  ) {}
 
   public async createDirectory(
     createDirectoryDto: CreateDirectoryBodyDto,
@@ -59,7 +66,30 @@ export class DirectoriesService {
     return toFileDto(trashedDirectory);
   }
 
+  public async restoreDirectory(directoryId: string): Promise<FileDto> {
+    const restoredDirectory =
+      await this.filesRepository.restoreByPk(directoryId);
+
+    if (!restoredDirectory) {
+      throw new NotFoundException(`Directory not found by ${directoryId} id`);
+    }
+
+    return toFileDto(restoredDirectory);
+  }
+
   public async deleteDirectory(directoryId: string): Promise<FileDto> {
+    const children = await this.filesRepository.findAll({
+      parentId: directoryId,
+    });
+
+    for (const child of children) {
+      if (child.mimeType === String(MimeTypes.DIRECTORY)) {
+        await this.deleteDirectory(child.fileId);
+      } else {
+        await this.filesService.deleteFile(child.fileId);
+      }
+    }
+
     const deletedDirectory = await this.filesRepository.deleteByPk(
       directoryId,
       {
@@ -71,17 +101,26 @@ export class DirectoriesService {
       throw new NotFoundException(`Directory not found by ${directoryId} id`);
     }
 
+    await this.filesService.deleteSharings(deletedDirectory.fileId);
+
     return toFileDto(deletedDirectory);
   }
 
-  public async restoreDirectory(directoryId: string): Promise<FileDto> {
-    const restoredDirectory =
-      await this.filesRepository.restoreByPk(directoryId);
+  public async moveDirectory(
+    directoryId: string,
+    targetDir: string,
+  ): Promise<FileDto> {
+    const parentId = targetDir === 'root' ? null : targetDir;
 
-    if (!restoredDirectory) {
-      throw new NotFoundException(`Directory not found by ${directoryId} id`);
+    const updatedDirectory = await this.filesRepository.updateByPk(
+      directoryId,
+      { parentId },
+    );
+
+    if (!updatedDirectory) {
+      throw new NotFoundException(`Directory not found by id ${directoryId}`);
     }
 
-    return toFileDto(restoredDirectory);
+    return toFileDto(updatedDirectory);
   }
 }

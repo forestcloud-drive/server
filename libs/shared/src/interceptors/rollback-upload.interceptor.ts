@@ -1,3 +1,7 @@
+import * as fs from 'node:fs/promises';
+import * as path from 'path';
+
+import { EnvParams } from '@app/shared/enums';
 import {
   CallHandler,
   ExecutionContext,
@@ -6,13 +10,11 @@ import {
   Logger,
   NestInterceptor,
 } from '@nestjs/common';
-import { finalize, Observable } from 'rxjs';
-import { FilesRepository } from '../../../../src/files/files.repository';
-import * as fs from 'node:fs/promises';
-import * as path from 'path';
-import type e from 'express';
 import { ConfigService } from '@nestjs/config';
-import { EnvParams } from '@app/shared/enums';
+import type e from 'express';
+import { finalize, Observable } from 'rxjs';
+
+import { FilesRepository } from '../../../../src/files/files.repository';
 
 @Injectable()
 export class RollbackUploadInterceptor implements NestInterceptor {

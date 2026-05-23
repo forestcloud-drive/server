@@ -1,13 +1,14 @@
 import {
-  ValidationArguments,
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
-import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import {
+  ValidationArguments,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
+
 import { FilesRepository } from '../../../../src/files/files.repository';
 
 @Injectable()
@@ -15,8 +16,15 @@ import { FilesRepository } from '../../../../src/files/files.repository';
 export class ValidateParentFile implements ValidatorConstraintInterface {
   constructor(private readonly filesRepository: FilesRepository) {}
 
-  public async validate(value: string): Promise<boolean> {
-    const parentFile = await this.filesRepository.findByPk(value);
+  public async validate(
+    value: string,
+    args: ValidationArguments,
+  ): Promise<boolean> {
+    const findTrashed: boolean = !!args.constraints?.[0];
+
+    const parentFile = await this.filesRepository.findByPk(value, {
+      paranoid: !findTrashed,
+    });
 
     if (!parentFile) {
       throw new NotFoundException('Parent directory not found');

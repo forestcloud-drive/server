@@ -1,19 +1,18 @@
+import { UserRoles } from '@app/shared/enums';
+import { BaseModel } from '@nestlize/repository';
 import {
   AllowNull,
   Column,
-  CreatedAt,
   DataType,
   Default,
-  DeletedAt,
   HasMany,
-  Model,
   PrimaryKey,
   Table,
   Unique,
-  UpdatedAt,
 } from 'sequelize-typescript';
-import { UserRoles } from '@app/shared/enums';
+
 import { FileModel } from './file.model';
+import { SharedFilesModel } from './shared-files.model';
 
 export interface UserCreationAttributes {
   fullname: string;
@@ -25,8 +24,9 @@ export interface UserCreationAttributes {
 }
 
 @Table({ tableName: 'users', timestamps: true, paranoid: true })
-export class UserModel extends Model<UserModel, UserCreationAttributes> {
+export class UserModel extends BaseModel<UserModel, UserCreationAttributes> {
   @PrimaryKey
+  @Default(DataType.UUIDV4)
   @Column
   declare userId: string;
 
@@ -63,17 +63,6 @@ export class UserModel extends Model<UserModel, UserCreationAttributes> {
   @HasMany(() => FileModel)
   declare files: FileModel[];
 
-  @CreatedAt
-  @Column
-  declare createdAt: Date;
-
-  @UpdatedAt
-  @Column
-  declare updatedAt: Date;
-
-  @Default(null)
-  @AllowNull
-  @DeletedAt
-  @Column({ type: DataType.DATE })
-  declare deletedAt: Date | null;
+  @HasMany(() => SharedFilesModel)
+  declare sharedFiles: SharedFilesModel[];
 }

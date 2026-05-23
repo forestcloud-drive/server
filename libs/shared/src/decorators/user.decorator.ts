@@ -1,8 +1,8 @@
+import { UserPayloadDto } from '@app/shared/dtos';
+import { extractUserFromRequest } from '@app/shared/utils';
 import type { ExecutionContext } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
-import { UserPayloadDto } from '@app/shared/dtos';
 import { plainToInstance } from 'class-transformer';
-import { extractUserFromRequest } from '@app/shared/utils';
 
 export const User = createParamDecorator(
   (data: keyof UserPayloadDto, context: ExecutionContext) => {

@@ -1,3 +1,11 @@
+import { Roles } from '@app/shared/decorators';
+import { RejectResponseDto, UserDto } from '@app/shared/dtos';
+import { UserRoles } from '@app/shared/enums';
+import {
+  JwtGuard,
+  OperateOnUserPermissionGuard,
+  RoleGuard,
+} from '@app/shared/guards';
 import {
   Body,
   Controller,
@@ -8,28 +16,22 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { AdminUsersService } from './admin-users.service';
 import {
   ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RejectResponseDto, UserDto } from '@app/shared/dtos';
-import { GetUserByIdParamsDto } from './dto/get-user-by-id-params.dto';
-import {
-  JwtGuard,
-  OperateOnUserPermissionGuard,
-  RoleGuard,
-} from '@app/shared/guards';
-import { Roles } from '@app/shared/decorators';
-import { UserRoles } from '@app/shared/enums';
-import { AddNewUserBodyDto } from './dto/add-new-user-body.dto';
-import { ResetUserPasswordBodyDto } from './dto/reset-user-password-body.dto';
-import { DeleteUserResponseDto } from './dto/delete-user-response.dto';
-import { ChangeUserRoleBody } from './dto/change-user-role-body';
-import { GetAllUsersResponseDto } from './dto/get-all-users-response.dto';
+
 import { ChangeUserInfoBodyDto } from '../../users/dto/change-user-info-body.dto';
+
+import { AdminUsersService } from './admin-users.service';
+import { AddNewUserBodyDto } from './dto/add-new-user-body.dto';
+import { ChangeUserRoleBody } from './dto/change-user-role-body';
+import { DeleteUserResponseDto } from './dto/delete-user-response.dto';
+import { GetAllUsersResponseDto } from './dto/get-all-users-response.dto';
+import { GetUserByIdParamsDto } from './dto/get-user-by-id-params.dto';
+import { ResetUserPasswordBodyDto } from './dto/reset-user-password-body.dto';
 
 @ApiTags('Admin users')
 @ApiResponse({

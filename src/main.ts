@@ -1,13 +1,14 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { Logger } from 'nestjs-pino';
-import { ConfigService } from '@nestjs/config';
-import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import helmet from 'helmet';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+// import type { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { EnvParams } from '@app/shared/enums';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
+import helmet from 'helmet';
+import { Logger } from 'nestjs-pino';
+
+import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -38,10 +39,11 @@ async function bootstrap(): Promise<void> {
     type: VersioningType.URI,
     prefix: 'v',
   });
-  app.enableCors({
-    origin: config.get<string>(EnvParams.CLIENT_URL),
-    credentials: true,
-  } as CorsOptions);
+  // ? Think about it, there can be multiple clients
+  // app.enableCors({
+  //   origin: config.get<string>(EnvParams.CLIENT_URL),
+  //   credentials: true,
+  // } as CorsOptions);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

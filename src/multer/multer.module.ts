@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { diskStorage } from 'multer';
 import { EnvParams } from '@app/shared/enums';
 import { buildFileName } from '@app/shared/utils';
+import { Module } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { MulterModule as PlatformExpressMulter } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Module({
   imports: [
