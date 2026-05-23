@@ -1,8 +1,14 @@
 import { toUserDto } from '@app/shared/builders';
-import { UserDto } from '@app/shared/dtos';
+import { UserDto, UserPayloadDto } from '@app/shared/dtos';
 import { generateHash } from '@app/shared/utils';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { useInnerError } from '@app/shared/helpers';
 
 import { UserModel } from '../database/models/user.model';
 
@@ -13,6 +19,8 @@ import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
+  protected readonly logger = new Logger(UsersService.name);
+
   constructor(private readonly usersRepository: UsersRepository) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<UserDto> {
@@ -71,5 +79,18 @@ export class UsersService {
     });
 
     return toUserDto(updatedUser!);
+  }
+
+  public async getProfile(userId: string): Promise<UserPayloadDto> {
+    const user = await this.usersRepository.findByPk(userId);
+
+    if (!user) {
+      this.logger.error(useInnerError('LUNF'));
+      throw new InternalServerErrorException(
+        'Logged in user profile not found',
+      );
+    }
+
+    return toUserDto(user);
   }
 }

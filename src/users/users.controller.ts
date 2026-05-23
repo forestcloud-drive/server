@@ -44,7 +44,7 @@ export class UsersController {
   public async getCurrentLoggedUser(
     @User() userDto: UserPayloadDto,
   ): Promise<UserPayloadDto> {
-    return Promise.resolve(userDto);
+    return this.usersService.getProfile(userDto.userId);
   }
 
   @Put('profile')
