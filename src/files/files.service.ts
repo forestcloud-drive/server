@@ -219,4 +219,14 @@ export class FilesService {
 
     return files.map(toFileDto);
   }
+
+  public async searchByTitle(title?: string): Promise<FileDto[]> {
+    const files = await this.filesRepository.findAll({
+      originalName: {
+        [Op.like]: `%${title}%`,
+      },
+    });
+
+    return files.map(toFileDto);
+  }
 }

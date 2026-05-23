@@ -41,6 +41,7 @@ import { UploadFilesBodyDto } from './dto/upload-file-body.dto';
 import { UploadFilesResponseDto } from './dto/upload-files-response.dto';
 import { FilesService } from './files.service';
 import { SetTrashedParentQueryDto } from './dto/set-trashed-parent-query.dto';
+import { SearchFileQueryDto } from './dto/search-file-query.dto';
 
 @ApiTags('Files')
 @ApiBearerAuth()
@@ -52,6 +53,26 @@ import { SetTrashedParentQueryDto } from './dto/set-trashed-parent-query.dto';
 @Controller({ path: 'files', version: '1' })
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
+
+  @Get('search')
+  @ApiOperation({
+    summary: 'Search files by title',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GetFilesResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  public async searchByTitle(
+    @Query() { title }: SearchFileQueryDto,
+  ): Promise<GetFilesResponseDto> {
+    const files = await this.filesService.searchByTitle(title);
+
+    return { files };
+  }
 
   @Get('trash')
   @ApiOperation({
