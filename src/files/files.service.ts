@@ -204,13 +204,14 @@ export class FilesService {
     const files = await this.filesRepository.findAll(
       {
         ...(parentId
-          ? {}
+          ? {
+              parentId,
+            }
           : {
               deletedAt: {
                 [Op.not]: null,
               },
             }),
-        parentId: parentId ?? null,
         userId,
       },
       { paranoid: false },
