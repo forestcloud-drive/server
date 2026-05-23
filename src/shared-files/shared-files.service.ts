@@ -154,7 +154,7 @@ export class SharedFilesService {
   }
 
   public async remove(fileId: string, userIds: string[]): Promise<HttpStatus> {
-    await this.sharedFileRepository.deleteAll({
+    await this.sharedFileRepository.delete({
       fileId,
       userId: { [Op.in]: userIds },
     });
@@ -228,6 +228,10 @@ export class SharedFilesService {
   }
 
   public async deleteExpiredLinks(): Promise<number> {
-    return this.shareLinkRepository.deleteExpiredLinks();
+    return this.shareLinkRepository.delete({
+      expiresAt: {
+        [Op.lt]: new Date(),
+      },
+    });
   }
 }

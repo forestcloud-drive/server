@@ -1,10 +1,6 @@
 import { AbstractRepository } from '@nestlize/repository';
 import { InjectModel } from '@nestjs/sequelize';
-import {
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
-import { WhereOptions } from 'sequelize';
+import { NotFoundException } from '@nestjs/common';
 
 import { SharedFilesModel } from '../database/models/shared-files.model';
 import { FileModel } from '../database/models/file.model';
@@ -48,18 +44,5 @@ export class SharedFilesRepository extends AbstractRepository<SharedFilesModel> 
     );
 
     return files.map((file) => file.file);
-  }
-
-  public async deleteAll(
-    query?: WhereOptions<SharedFilesModel>,
-  ): Promise<number> {
-    try {
-      return this.model.destroy({
-        where: query,
-      });
-    } catch (error) {
-      this.logger.error(`deleteAll: ${error as Error}`);
-      throw new InternalServerErrorException();
-    }
   }
 }

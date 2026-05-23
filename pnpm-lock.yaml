@@ -36,8 +36,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.1)(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)
       '@nestlize/repository':
-        specifier: ^0.1.13
-        version: 0.1.13(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)(sequelize-typescript@2.1.6(@types/node@22.15.18)(@types/validator@13.15.2)(reflect-metadata@0.2.2)(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7)))(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7))
+        specifier: ^0.1.14
+        version: 0.1.14(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)(sequelize-typescript@2.1.6(@types/node@22.15.18)(@types/validator@13.15.2)(reflect-metadata@0.2.2)(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7)))(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7))
       archiver:
         specifier: ^7.0.1
         version: 7.0.1
@@ -1039,8 +1039,8 @@ packages:
       '@nestjs/platform-express':
         optional: true
 
-  '@nestlize/repository@0.1.13':
-    resolution: {integrity: sha512-/8Zym8+Wzm1gcy9HlJjLS7oPUw3VCgIwmVXHmC0z4prRJiuHcWxpLsm+mk3pyO33taMJ/Ng52HEROdvbQ4terw==}
+  '@nestlize/repository@0.1.14':
+    resolution: {integrity: sha512-T0QUs/RopO4Y7lnCS5RgnhFFx6uoVSf5O4w/qa5zx4sgfwRJTKYhLtzsaXFfwbwUO24CLDaI1IihAoBIsJN/dA==}
     peerDependencies:
       '@nestjs/common': 11.x
       reflect-metadata: 0.x
@@ -5995,7 +5995,7 @@ snapshots:
     optionalDependencies:
       '@nestjs/platform-express': 11.1.1(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.1)
 
-  '@nestlize/repository@0.1.13(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)(sequelize-typescript@2.1.6(@types/node@22.15.18)(@types/validator@13.15.2)(reflect-metadata@0.2.2)(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7)))(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7))':
+  '@nestlize/repository@0.1.14(@nestjs/common@11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2)(sequelize-typescript@2.1.6(@types/node@22.15.18)(@types/validator@13.15.2)(reflect-metadata@0.2.2)(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7)))(sequelize@6.37.7(pg-hstore@2.3.4)(pg@8.16.3)(sqlite3@5.1.7))':
     dependencies:
       '@nestjs/common': 11.1.1(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2)
       reflect-metadata: 0.2.2
