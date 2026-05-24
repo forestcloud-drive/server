@@ -1,6 +1,5 @@
 import { AbstractRepository } from '@nestlize/repository';
 import { InjectModel } from '@nestjs/sequelize';
-import { NotFoundException } from '@nestjs/common';
 
 import { SharedFilesModel } from '../database/models/shared-files.model';
 import { FileModel } from '../database/models/file.model';
@@ -15,19 +14,14 @@ export class SharedFilesRepository extends AbstractRepository<SharedFilesModel> 
 
   public async getSharedFileByFileId(
     fileId: string,
-  ): Promise<SharedFilesModel> {
-    const file = await this.findOne(
-      { fileId },
+    userId: string,
+  ): Promise<SharedFilesModel | null> {
+    return await this.findOne(
+      { fileId, userId },
       {
         include: [{ model: FileModel, required: true }],
       },
     );
-
-    if (!file) {
-      throw new NotFoundException('File not found or access denied');
-    }
-
-    return file;
   }
 
   public async getAllFiles(userId: string): Promise<FileModel[]> {

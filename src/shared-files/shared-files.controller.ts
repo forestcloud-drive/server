@@ -33,6 +33,7 @@ import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
 import { SetParentQueryDto } from '../files/dto/set-parent-query.dto';
 import { DownloadFileParamsDto } from '../files/dto/download-file-params.dto';
 import { GetFileParamsDto } from '../files/dto/get-file-params.dto';
+import { SharedFilesModel } from '../database/models/shared-files.model';
 
 import { CreateSharedFileDto } from './dto/create-shared-file.dto';
 import { SharedFilesService } from './shared-files.service';
@@ -111,6 +112,28 @@ export class SharedFilesController {
     @Query() { parentId, link: shareLinkId }: SetParentQueryDto,
   ): Promise<GetFilesResponseDto> {
     return this.sharedFilesService.findAll(userId, parentId, shareLinkId);
+  }
+
+  @Get('sharings')
+  @ApiOperation({
+    summary: 'Get own files shared with other users',
+  })
+  @ApiResponse({
+    status: 200,
+    type: GetFilesResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    type: RejectResponseDto,
+  })
+  @ApiResponse({
+    status: 403,
+    type: RejectResponseDto,
+  })
+  public async getMySharings(
+    @User() { userId }: UserPayloadDto,
+  ): Promise<SharedFilesModel[]> {
+    return this.sharedFilesService.getMySharing(userId);
   }
 
   @Get(':fileId')
