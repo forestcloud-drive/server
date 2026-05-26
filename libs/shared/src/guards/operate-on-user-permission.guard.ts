@@ -23,7 +23,7 @@ export class OperateOnUserPermissionGuard implements CanActivate {
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const request: e.Request = context.switchToHttp().getRequest();
     const user = extractUserFromRequest(request);
-    const targetUserId = request.params.userId;
+    const targetUserId = request.params.userId as string;
 
     if (user.role === UserRoles.OWNER) {
       return true;
