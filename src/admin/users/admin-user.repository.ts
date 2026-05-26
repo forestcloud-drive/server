@@ -38,7 +38,7 @@ export class AdminUserRepository extends AbstractRepository<UserModel> {
   }
 
   public async deleteUser(userId: string): Promise<UserModel> {
-    const deletedUser = await this.deleteByPk(userId);
+    const deletedUser = await this.deleteByPk(userId, { force: true });
 
     if (!deletedUser) {
       throw new NotFoundException(`User not found by '${userId}' id`);

@@ -318,7 +318,7 @@ describe('SharedFiles (e2e)', () => {
         .get(`/api/v1/shared/download/${fileId}`)
         .set('Authorization', `Bearer ${userToken}`);
 
-      expect(res.status).toBe(404);
+      expect(res.status).toBe(403);
     });
   });
 

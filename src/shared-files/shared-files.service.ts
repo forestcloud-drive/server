@@ -18,6 +18,8 @@ import { GetFilesResponseDto } from '../directories/dto/get-files-response.dto';
 import { FilesRepository } from '../files/files.repository';
 import { FileModel } from '../database/models/file.model';
 import { ShareLinkModel } from '../database/models/share-link.model';
+import { SharedFilesModel } from '../database/models/shared-files.model';
+import { UserModel } from '../database/models/user.model';
 
 import { SharedFilesRepository } from './shared-files.repository';
 import { ShareLinkResponseDto } from './dto/share-link-response.dto';
@@ -37,7 +39,20 @@ export class SharedFilesService {
     fileId: string,
     userIds: string[],
   ): Promise<SharedFileDto[]> {
-    const sharedDtos = userIds.map((userId) => ({ userId, fileId }));
+    const alreadyShared = await this.sharedFileRepository.findAll({
+      fileId,
+      userId: {
+        [Op.in]: userIds,
+      },
+    });
+
+    const alreadySharedUserIds = new Set(
+      alreadyShared.map((shared) => shared.userId),
+    );
+
+    const sharedDtos = userIds
+      .filter((userId) => !alreadySharedUserIds.has(userId))
+      .map((userId) => ({ fileId, userId }));
 
     const shared = await this.sharedFileRepository.insertMany(sharedDtos);
 
@@ -120,24 +135,28 @@ export class SharedFilesService {
     userId: string,
     response: e.Response,
   ): Promise<FileDto> {
-    const sharedFile =
-      await this.sharedFileRepository.getSharedFileByFileId(fileId);
+    const sharedFile = await this.sharedFileRepository.getSharedFileByFileId(
+      fileId,
+      userId,
+    );
 
-    if (sharedFile.userId === userId) {
-      return this.downloadsService.downloadFile(sharedFile.file, response);
+    if (sharedFile) {
+      return this.downloadAny(sharedFile.file, response);
     }
 
-    const hasAccess = await this.checkAccess(userId, sharedFile.file.parentId!);
+    const file = await this.filesRepository.findByPk(fileId);
+
+    if (!file) {
+      throw new BadRequestException(`File does not exists`);
+    }
+
+    const hasAccess = await this.checkAccess(userId, file.parentId!);
 
     if (!hasAccess) {
       throw new ForbiddenException('File not found or access denied');
     }
 
-    if (sharedFile.file.mimeType === String(MimeTypes.DIRECTORY)) {
-      return this.downloadsService.downloadDirectory(sharedFile.file, response);
-    }
-
-    return this.downloadsService.downloadFile(sharedFile.file, response);
+    return this.downloadAny(file, response);
   }
 
   public async downloadByLink(
@@ -233,5 +252,34 @@ export class SharedFilesService {
         [Op.lt]: new Date(),
       },
     });
+  }
+
+  private async downloadAny(
+    file: FileModel,
+    response: e.Response,
+  ): Promise<FileDto> {
+    if (file.mimeType === String(MimeTypes.DIRECTORY)) {
+      return this.downloadsService.downloadDirectory(file, response);
+    }
+
+    return this.downloadsService.downloadFile(file, response);
+  }
+
+  public async getMySharing(userId: string): Promise<SharedFilesModel[]> {
+    return this.sharedFileRepository.findAll(
+      {
+        '$file.userId$': userId,
+      },
+      {
+        include: [
+          { model: FileModel, required: true, as: 'file' },
+          {
+            model: UserModel,
+            required: true,
+            attributes: ['fullname', 'email'],
+          },
+        ],
+      },
+    );
   }
 }

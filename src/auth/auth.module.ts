@@ -19,7 +19,7 @@ import { LocalStrategy } from './strategies/local.strategy';
         global: true,
         secret: config.getOrThrow<string>(EnvParams.JWT_SECRET),
         signOptions: {
-          expiresIn: config.getOrThrow<string>(EnvParams.JWT_EXPIRES_IN),
+          expiresIn: config.getOrThrow<number>(EnvParams.JWT_EXPIRES_IN),
         },
       }),
       inject: [ConfigService],

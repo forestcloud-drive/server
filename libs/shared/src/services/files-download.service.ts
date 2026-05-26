@@ -87,7 +87,7 @@ export class FilesDownloadService {
   }): Promise<void> {
     const children = await this.filesRepository.findAll({
       parentId: directory.fileId,
-      userId,
+      ...(userId ? { userId } : {}),
     });
 
     for (const child of children) {
