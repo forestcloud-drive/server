@@ -25,14 +25,13 @@ import { ResetUserPasswordBodyDto } from './dto/reset-user-password-body.dto';
   type: RejectResponseDto,
 })
 @ApiBearerAuth()
-@Roles([UserRoles.ADMIN])
-@UseGuards(JwtGuard, RoleGuard)
 @Controller({ path: 'admin/users', version: '1' })
 export class AdminUsersController {
   constructor(private readonly usersService: AdminUsersService) {}
 
   @Get()
   @Roles([UserRoles.USER, UserRoles.ADMIN, UserRoles.OWNER])
+  @UseGuards(JwtGuard, RoleGuard)
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
@@ -43,6 +42,8 @@ export class AdminUsersController {
   }
 
   @Get(':userId')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @ApiOperation({ summary: 'Get user by id' })
   @ApiResponse({
     status: 200,
@@ -63,6 +64,8 @@ export class AdminUsersController {
   }
 
   @Put(':userId/give-access')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @ApiOperation({ summary: 'Give user access' })
   @ApiResponse({
     status: 200,
@@ -83,6 +86,8 @@ export class AdminUsersController {
   }
 
   @Put(':userId/restrict-access')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @UseGuards(OperateOnUserPermissionGuard)
   @ApiOperation({ summary: 'Restrict access to user' })
   @ApiResponse({
@@ -104,6 +109,8 @@ export class AdminUsersController {
   }
 
   @Post()
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @ApiOperation({ summary: 'Add new user' })
   @ApiResponse({
     status: 200,
@@ -120,6 +127,8 @@ export class AdminUsersController {
   }
 
   @Put(':userId')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @UseGuards(OperateOnUserPermissionGuard)
   @ApiOperation({ summary: 'Change user info' })
   @ApiResponse({
@@ -142,6 +151,8 @@ export class AdminUsersController {
   }
 
   @Put(':userId/role')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @Roles([UserRoles.OWNER])
   @ApiOperation({ summary: 'Change user role' })
   @ApiResponse({
@@ -164,6 +175,8 @@ export class AdminUsersController {
   }
 
   @Put(':userId/password')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @UseGuards(OperateOnUserPermissionGuard)
   @ApiOperation({ summary: 'Recover user password' })
   @ApiResponse({
@@ -186,6 +199,8 @@ export class AdminUsersController {
   }
 
   @Delete(':userId')
+  @Roles([UserRoles.ADMIN])
+  @UseGuards(JwtGuard, RoleGuard)
   @UseGuards(OperateOnUserPermissionGuard)
   @ApiOperation({ summary: 'Delete user' })
   @ApiResponse({
