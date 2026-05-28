@@ -1,27 +1,9 @@
 import { Roles } from '@app/shared/decorators';
 import { RejectResponseDto, UserDto } from '@app/shared/dtos';
 import { UserRoles } from '@app/shared/enums';
-import {
-  JwtGuard,
-  OperateOnUserPermissionGuard,
-  RoleGuard,
-} from '@app/shared/guards';
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  UseGuards,
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { JwtGuard, OperateOnUserPermissionGuard, RoleGuard, } from '@app/shared/guards';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags, } from '@nestjs/swagger';
 
 import { ChangeUserInfoBodyDto } from '../../users/dto/change-user-info-body.dto';
 
@@ -50,6 +32,7 @@ export class AdminUsersController {
   constructor(private readonly usersService: AdminUsersService) {}
 
   @Get()
+  @Roles([UserRoles.USER, UserRoles.ADMIN, UserRoles.OWNER])
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
